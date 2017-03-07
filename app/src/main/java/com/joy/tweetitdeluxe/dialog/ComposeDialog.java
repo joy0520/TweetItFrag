@@ -1,22 +1,19 @@
-package com.joy.tweetit.dialog;
+package com.joy.tweetitdeluxe.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.joy.tweetit.R;
+import com.joy.tweetitdeluxe.R;
 
 import java.util.Locale;
 

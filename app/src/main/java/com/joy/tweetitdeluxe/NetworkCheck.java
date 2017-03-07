@@ -1,4 +1,4 @@
-package com.joy.tweetit;
+package com.joy.tweetitdeluxe;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

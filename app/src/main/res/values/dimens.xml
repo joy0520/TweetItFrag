@@ -5,6 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="main_viewer_no_network">20sp</dimen>
+    <dimen name="main_viewer_tab_layout_height">50dp</dimen>
 
     <dimen name="floating_button_margin">10dp</dimen>
     <dimen name="floating_button_elevation">4dp</dimen>

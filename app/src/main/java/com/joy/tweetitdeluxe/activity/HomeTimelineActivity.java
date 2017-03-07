@@ -1,4 +1,4 @@
-package com.joy.tweetit.activity;
+package com.joy.tweetitdeluxe.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,13 +25,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.joy.tweetit.NetworkCheck;
-import com.joy.tweetit.R;
-import com.joy.tweetit.TweetItApplication;
-import com.joy.tweetit.adapter.TweetsAdapter;
-import com.joy.tweetit.dialog.ComposeDialog;
-import com.joy.tweetit.dialog.DetailDialog;
-import com.joy.tweetit.model.Tweet;
+import com.joy.tweetitdeluxe.NetworkCheck;
+import com.joy.tweetitdeluxe.R;
+import com.joy.tweetitdeluxe.TweetItApplication;
+import com.joy.tweetitdeluxe.adapter.TweetsAdapter;
+import com.joy.tweetitdeluxe.dialog.ComposeDialog;
+import com.joy.tweetitdeluxe.dialog.DetailDialog;
+import com.joy.tweetitdeluxe.model.Tweet;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.lang.reflect.Type;
@@ -49,7 +49,7 @@ public class HomeTimelineActivity extends AppCompatActivity implements ComposeDi
     private static final int INTERVAL_AUTO_COLLAPSE_APPBAR_MS = 5000;
     private static final String SHARED_PREFS_TWEET_DRAFT_KEY = "tweet_draft";
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     private SwipeRefreshLayout mSwipeRefresh;
     private RecyclerView mList;

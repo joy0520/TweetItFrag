@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/AppBaseTheme.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/main_viewer"
+            app:layout_collapseMode="parallax"
+            app:layout_scrollFlags="scroll|snap|enterAlways" />
+
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_viewer_tab_layout_height"
+            android:layout_below="@id/toolbar"
+            app:pstsShouldExpand="true"
+            app:pstsTextAllCaps="true" />
+
+        <TextView
+            android:id="@+id/no_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_below="@id/tab_layout"
+            android:layout_centerHorizontal="true"
+            android:text="@string/main_viewer_no_network"
+            android:textColor="@color/main_viewer_no_network"
+            android:textSize="@dimen/main_viewer_no_network"
+            android:visibility="gone" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tab_layout" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/floating_button_margin"
+            android:src="@drawable/ic_compose"
+            app:elevation="@dimen/floating_button_elevation" />
+    </RelativeLayout>
+</layout>

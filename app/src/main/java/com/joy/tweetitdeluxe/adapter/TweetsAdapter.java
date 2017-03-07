@@ -1,7 +1,6 @@
-package com.joy.tweetit.adapter;
+package com.joy.tweetitdeluxe.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +14,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.joy.tweetit.R;
-import com.joy.tweetit.activity.HomeTimelineActivity;
-import com.joy.tweetit.dialog.ComposeDialog;
-import com.joy.tweetit.dialog.DetailDialog;
-import com.joy.tweetit.model.Tweet;
+import com.joy.tweetitdeluxe.R;
+import com.joy.tweetitdeluxe.activity.HomeTimelineActivity;
+import com.joy.tweetitdeluxe.model.Tweet;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**

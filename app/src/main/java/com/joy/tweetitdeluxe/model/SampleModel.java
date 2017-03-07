@@ -1,6 +1,6 @@
-package com.joy.tweetit.model;
+package com.joy.tweetitdeluxe.model;
 
-import com.joy.tweetit.MyDatabase;
+import com.joy.tweetitdeluxe.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

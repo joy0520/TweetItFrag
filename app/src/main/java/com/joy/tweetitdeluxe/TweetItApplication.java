@@ -1,4 +1,4 @@
-package com.joy.tweetit;
+package com.joy.tweetitdeluxe;
 
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowConfig;

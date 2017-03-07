@@ -2,7 +2,7 @@
 
 **Tweet It Deluxe** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: **1** hours spent in total
 
 ## User Stories
 
@@ -64,8 +64,9 @@ Describe any challenges encountered while building the app.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
 - [Gson](https://github.com/google/gson) - A Java serialization/deserialization library that can convert Java Objects into JSON and back
 - [Joda-time-android](https://github.com/dlew/joda-time-android) - Joda-Time library with Android specialization
-- [Stetho](http://facebook.github.io/stetho/) - A debug bridge for Android applications
 - [Parceler](https://parceler.org/) - Android Parcelable code generator for Google Android
+- [PagerSlidingTabStrip](https://github.com/astuetz/PagerSlidingTabStrip) - An interactive indicator to navigate between the different pages of a ViewPager
+- [Stetho](http://facebook.github.io/stetho/) - A debug bridge for Android applications
 
 ## License
 

@@ -1,4 +1,4 @@
-package com.joy.tweetit;
+package com.joy.tweetitdeluxe;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

@@ -1,7 +1,6 @@
-package com.joy.tweetit;
+package com.joy.tweetitdeluxe;
 
 import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
@@ -48,7 +47,7 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("page", String.valueOf(page));
-        params.put("count", 25);
+        params.put("count", 50);
         params.put("since_id", 1);
         getClient().get(apiUrl, params, handler);
     }

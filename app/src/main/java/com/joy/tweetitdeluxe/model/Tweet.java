@@ -1,8 +1,8 @@
-package com.joy.tweetit.model;
+package com.joy.tweetitdeluxe.model;
 
 import android.support.annotation.NonNull;
 
-import com.joy.tweetit.MyDatabase;
+import com.joy.tweetitdeluxe.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -11,12 +11,10 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.Minutes;
 import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;

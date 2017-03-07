@@ -1,4 +1,4 @@
-package com.joy.tweetit.dialog;
+package com.joy.tweetitdeluxe.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.joy.tweetit.R;
-import com.joy.tweetit.model.Tweet;
+import com.joy.tweetitdeluxe.R;
+import com.joy.tweetitdeluxe.model.Tweet;
 
 import org.parceler.Parcels;
 
