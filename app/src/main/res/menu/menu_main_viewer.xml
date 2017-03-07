@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toolbar_compose"
+        android:icon="@drawable/ic_compose"
+        android:title="@string/main_viewer_menu_item_compose"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/toolbar_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/main_viewer_menu_item_logout"
+        app:showAsAction="ifRoom" />
+
+</menu>
