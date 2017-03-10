@@ -1,19 +1,133 @@
 package com.joy.tweetitdeluxe.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.joy.tweetitdeluxe.NetworkCheck;
 import com.joy.tweetitdeluxe.R;
-import com.joy.tweetitdeluxe.adapter.HomeFragmentPagerAdapter;
+import com.joy.tweetitdeluxe.TweetItApplication;
+import com.joy.tweetitdeluxe.dialog.ComposeDialog;
+import com.joy.tweetitdeluxe.dialog.DetailDialog;
+import com.joy.tweetitdeluxe.fragment.HomeTimelineFragment;
+import com.joy.tweetitdeluxe.fragment.MentionsTimelineFragment;
+import com.joy.tweetitdeluxe.fragment.TimelineFragment;
+import com.joy.tweetitdeluxe.model.Tweet;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by joy0520 on 2017/3/7.
  */
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements TimelineFragment.Callback, ComposeDialog.Callback {
+    private static final String TAG = "HomeActivity.";
+    private static final int INTERVAL_CHECK_NET_MS = 10000;
+    public static final int INTERVAL_AUTO_COLLAPSE_APPBAR_MS = 5000;
+    private static final String SHARED_PREFS_TWEET_DRAFT_KEY = "tweet_draft";
+
+    public static final boolean DEBUG = true;
+
+    private AppBarLayout mAppbarLayout;
+    private Toolbar mToolbar;
+    private TextView mNoNetwork;
+    private ProgressBar mProgressBottom;
+    private FloatingActionButton mFloatingButton;
+    private TimelineFragment mHomeTimelineFragment, mMentionsTimelineFragment;
+
+    private Handler mHandler;
+
+    private Runnable mCheckNetRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (NetworkCheck.isNetworkAvailable(getBaseContext())) {
+                mNoNetwork.setVisibility(View.GONE);
+            } else {
+                mNoNetwork.setVisibility(View.VISIBLE);
+            }
+            mHandler.postDelayed(mCheckNetRunnable, INTERVAL_CHECK_NET_MS);
+        }
+    };
+
+    /**
+     * Return the order of the fragments in the view pager
+     */
+    private class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
+        private String tabTitles[] = new String[]{"Home", "Mentions"};
+
+        public HomeFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return tabTitles.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return HomeTimelineFragment.newInstance(0);
+            } else if (position == 1) {
+                return MentionsTimelineFragment.newInstance(1);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return tabTitles[position];
+        }
+
+        // Here we can finally safely save a reference to the created
+        // Fragment, no matter where it came from (either getItem() or
+        // FragmentManger). Simply save the returned Fragment from
+        // super.instantiateItem() into an appropriate reference depending
+        // on the ViewPager position.
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            // save the appropriate reference depending on position
+            switch (position) {
+                case 0:
+                    mHomeTimelineFragment = (TimelineFragment) createdFragment;
+                    break;
+                case 1:
+                    mMentionsTimelineFragment = (TimelineFragment) createdFragment;
+                    break;
+            }
+            return createdFragment;
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,5 +142,155 @@ public class HomeActivity extends AppCompatActivity {
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tab_layout);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+        // Init views
+        mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mNoNetwork = (TextView) findViewById(R.id.no_network);
+        mProgressBottom = (ProgressBar) findViewById(R.id.progrss_bottom);
+        mFloatingButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
+
+        // Setup toolbar
+        setSupportActionBar(mToolbar);
+
+        mHandler = new Handler();
+
+        // Floating Action Button
+        mFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showComposeDialog();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mHandler.post(mCheckNetRunnable);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_viewer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toolbar_compose:
+                showComposeDialog();
+                return true;
+            case R.id.toolbar_logout:
+                // Log out
+                clearTweetDraft();
+                TweetItApplication.getRestClient().clearAccessToken();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showComposeDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialog dialog = ComposeDialog.newInstance(getString(R.string.compose_dialog), getTweetDraft());
+        dialog.setCallback(this);
+        dialog.show(fm, "fragment_compose_dialog");
+    }
+
+    private void saveTweetDraft(String tweetBody) {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putString(SHARED_PREFS_TWEET_DRAFT_KEY, tweetBody);
+        edit.apply();
+    }
+
+    private String getTweetDraft() {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        return pref.getString(SHARED_PREFS_TWEET_DRAFT_KEY, "");
+    }
+
+    private void clearTweetDraft() {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putString(SHARED_PREFS_TWEET_DRAFT_KEY, "");
+        edit.apply();
+    }
+
+    //
+    // Interface for ComposeDialog
+    //
+
+    @Override
+    public void onPostNewTweet(String newTweetBody) {
+        if (DEBUG) Log.i("onPostNewTweet()", "newTweetBody=" + newTweetBody);
+        if (newTweetBody == null || newTweetBody.isEmpty()) return;
+        TweetItApplication.getRestClient().postTweet(newTweetBody,
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.i(TAG + "onFailure()", "" + responseString);
+                        if (mHomeTimelineFragment != null) {
+                            mHomeTimelineFragment.setRefreshing(false);
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        Log.i(TAG + "onSuccess()", "" + responseString);
+                        Gson gson = new Gson();
+                        Tweet tweet = gson.fromJson(responseString, Tweet.class);
+                        if (mHomeTimelineFragment != null) {
+                            mHomeTimelineFragment.setRefreshing(false);
+                            mHomeTimelineFragment.onPostANewTweet(tweet);
+                            // Move current watching position to the top most.
+                            mHomeTimelineFragment.moveToMostTopPosition();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onCancelNewTweet(String newTweet) {
+        saveTweetDraft(newTweet);
+    }
+
+    //
+    // Interface for TimelineFragment
+    //
+    @Override
+    public void onItemClicked(Tweet tweet) {
+        FragmentManager fm = getSupportFragmentManager();
+        DetailDialog dialog = DetailDialog.newInstance(tweet);
+        dialog.show(fm, "fragment_detail_dialog");
+    }
+
+    @Override
+    public void notifyAppBarCollapse() {
+        if (mAppbarLayout != null) {
+            mAppbarLayout.setExpanded(false);
+        }
+    }
+
+    @Override
+    public void setProgressVisible(boolean visible) {
+        mProgressBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setNoNetworkVisible(boolean visible) {
+        mNoNetwork.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

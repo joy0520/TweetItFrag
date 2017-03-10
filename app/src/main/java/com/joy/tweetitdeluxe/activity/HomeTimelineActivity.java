@@ -218,7 +218,7 @@ public class HomeTimelineActivity extends AppCompatActivity implements ComposeDi
                         mSwipeRefresh.setRefreshing(false);
                         Gson gson = new Gson();
                         Tweet tweet = gson.fromJson(responseString, Tweet.class);
-                        mAdapter.postTweeting(tweet);
+                        mAdapter.postANewTweet(tweet);
                         // Move current watching position to the top most.
                         mList.scrollToPosition(0);
                         //TODO trigger a refresh after one minute maybe.
@@ -227,7 +227,7 @@ public class HomeTimelineActivity extends AppCompatActivity implements ComposeDi
     }
 
     @Override
-    public void onOpenDetailDialog(Tweet tweet) {
+    public void onItemClicked(Tweet tweet) {
         FragmentManager fm = getSupportFragmentManager();
         DetailDialog dialog = DetailDialog.newInstance(tweet);
         dialog.show(fm, "fragment_detail_dialog");

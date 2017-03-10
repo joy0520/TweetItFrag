@@ -87,7 +87,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
     }
 
     public interface Callback {
-        void onOpenDetailDialog(Tweet tweet);
+        void onItemClicked(Tweet tweet);
     }
 
     private List<Tweet> mList;
@@ -101,7 +101,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
         mList = new ArrayList<>();
     }
 
-    public void postTweeting(Tweet tweet) {
+    public void postANewTweet(Tweet tweet) {
         mList.add(0, tweet);
         saveTweets(mList);
         notifyItemInserted(0);
@@ -152,7 +152,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mCallback != null) {
-                        mCallback.onOpenDetailDialog(tweet);
+                        mCallback.onItemClicked(tweet);
                     }
                 }
             });

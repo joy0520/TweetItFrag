@@ -32,7 +32,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="@string/main_viewer_no_network"
-            android:textColor="@color/main_viewer_no_network"
+            android:textColor="@color/main_viewer_no_network_text_color"
             android:textSize="@dimen/main_viewer_no_network"
             android:visibility="gone" />
 
