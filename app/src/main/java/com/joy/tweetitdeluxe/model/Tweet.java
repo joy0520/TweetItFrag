@@ -15,8 +15,10 @@ import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -37,6 +39,10 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
     @ForeignKey(saveForeignKeyModel = true)
     @Column
     private User user;
+    @Column
+    private boolean mentionsMe;
+
+    private UserMentions[] user_mentions;
 
     public String getText() {
         return text;
@@ -107,6 +113,9 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
         return user.profile_image_url_https;
     }
 
+    public boolean isMentionsMe() {
+        return mentionsMe;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -122,6 +131,23 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setMentionsMe(boolean mentionsMe) {
+        this.mentionsMe = mentionsMe;
+    }
+
+    public Tweet checkMentionsUser(String screenName) {
+        this.mentionsMe = getMentionsScreenNames().contains(screenName);
+        return this;
+    }
+
+    public List<String> getMentionsScreenNames() {
+        ArrayList<String> screenNames = new ArrayList<>();
+        for (UserMentions mentions : user_mentions) {
+            screenNames.add(mentions.screen_name);
+        }
+        return screenNames;
     }
 
     @Override

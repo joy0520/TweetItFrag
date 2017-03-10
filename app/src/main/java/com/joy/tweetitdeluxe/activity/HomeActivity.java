@@ -293,4 +293,8 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
     public void setNoNetworkVisible(boolean visible) {
         mNoNetwork.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
+
+    public String getUserName() {//TODO
+        return "";
+    }
 }

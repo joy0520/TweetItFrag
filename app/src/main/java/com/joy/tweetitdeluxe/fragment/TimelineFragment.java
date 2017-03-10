@@ -107,7 +107,7 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
                 android.R.color.holo_red_light);
 
         // Adapter
-        mAdapter = new TweetsAdapter(getContext());
+        mAdapter = createRecyclerViewAdapter(getContext());
         mAdapter.setCallback(this);
         mManager = new LinearLayoutManager(getContext());
         mScrollListener = new TweetsAdapter.EndlessScrollListener(mManager) {
@@ -148,6 +148,10 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
     @Override
     public void onItemClicked(Tweet tweet) {
         mCallback.onItemClicked(tweet);
+    }
+
+    TweetsAdapter createRecyclerViewAdapter(Context context) {
+        return new TweetsAdapter(context);
     }
 
     public void addTweets(List<Tweet> tweets) {

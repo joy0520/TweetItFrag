@@ -178,7 +178,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private List<Tweet> loadTweetsFromDB() {
+    List<Tweet> loadTweetsFromDB() {
         return SQLite.select().from(Tweet.class).queryList();
     }
 
