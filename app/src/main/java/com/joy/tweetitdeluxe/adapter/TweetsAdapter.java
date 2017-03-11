@@ -1,6 +1,7 @@
 package com.joy.tweetitdeluxe.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.joy.tweetitdeluxe.R;
 import com.joy.tweetitdeluxe.activity.HomeTimelineActivity;
+import com.joy.tweetitdeluxe.activity.ProfileActivity;
 import com.joy.tweetitdeluxe.model.Tweet;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -154,6 +156,14 @@ public class TweetsAdapter extends RecyclerView.Adapter {
                     if (mCallback != null) {
                         mCallback.onItemClicked(tweet);
                     }
+                }
+            });
+            tweetHolder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.putExtra("screen_name", tweet.getScreenName());
+                    mContext.startActivity(intent);
                 }
             });
         }
