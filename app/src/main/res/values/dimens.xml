@@ -25,4 +25,10 @@
     <dimen name="dialog_tweet_detail_user_name_size">20sp</dimen>
     <dimen name="dialog_tweet_detail_content_size">24sp</dimen>
 
+    <dimen name="profile_user_container_height">120dp</dimen>
+    <dimen name="profile_user_photo_size">100dp</dimen>
+    <dimen name="profile_user_photo_padding">8dp</dimen>
+    <dimen name="profile_user_name_size">20sp</dimen>
+    <dimen name="profile_user_other_info_text_size">14sp</dimen>
+
 </resources>

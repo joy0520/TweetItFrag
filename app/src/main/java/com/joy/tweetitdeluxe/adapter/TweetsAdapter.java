@@ -35,7 +35,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
 
         public TweetHolder(View itemView) {
             super(itemView);
-            image = (ImageView) itemView.findViewById(R.id.image);
+            image = (ImageView) itemView.findViewById(R.id.photo);
             name = (TextView) itemView.findViewById(R.id.name);
             userName = (TextView) itemView.findViewById(R.id.user_name);
             text = (TextView) itemView.findViewById(R.id.text);
@@ -178,7 +178,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
         }
     }
 
-    List<Tweet> loadTweetsFromDB() {
+    public List<Tweet> loadTweetsFromDB() {
         return SQLite.select().from(Tweet.class).queryList();
     }
 

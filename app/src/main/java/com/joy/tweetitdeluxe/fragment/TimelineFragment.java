@@ -3,7 +3,6 @@ package com.joy.tweetitdeluxe.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -138,11 +137,6 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
         mList.addOnScrollListener(mScrollListener);
 
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

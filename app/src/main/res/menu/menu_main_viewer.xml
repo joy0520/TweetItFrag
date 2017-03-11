@@ -6,12 +6,18 @@
         android:id="@+id/toolbar_compose"
         android:icon="@drawable/ic_compose"
         android:title="@string/main_viewer_menu_item_compose"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/toolbar_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/main_viewer_menu_item_profile"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/toolbar_logout"
         android:icon="@drawable/ic_logout"
         android:title="@string/main_viewer_menu_item_logout"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

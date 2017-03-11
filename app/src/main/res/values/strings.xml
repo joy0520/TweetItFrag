@@ -6,12 +6,14 @@
     <string name="app_name">Tweet It Deluxe</string>
     <string name="main_viewer">Home Timeline</string>
     <string name="activity_home">Home Activity</string>
+    <string name="activity_profile">Profile Activity</string>
 
     <string name="login_label">Connect to Twitter</string>
 
     <string name="main_viewer_no_network">Network Unavailable Now</string>
     <string name="main_viewer_new_tweets">New Tweets</string>
     <string name="main_viewer_menu_item_compose">Compose</string>
+    <string name="main_viewer_menu_item_profile">Profile</string>
     <string name="main_viewer_menu_item_logout">Log out</string>
 
     <string name="compose_dialog">New Tweet</string>

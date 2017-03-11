@@ -22,55 +22,68 @@ import cz.msebera.android.httpclient.Header;
  * Created by joy0520 on 2017/3/10.
  */
 
-public class HomeTimelineFragment extends TimelineFragment {
-    private static final String TAG = "HomeTimelineFragment";
+public class UserTimelineFragment extends TimelineFragment {
+    public static final String ARG_SCREEN_NAME = "ARG_SCREEN_NAME";
+    private static final String TAG = "UserTimelineFragment";
 
-    public static TimelineFragment newInstance(int page) {
+    private String mScreenName;
+
+    public static UserTimelineFragment newInstance(String screenName) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        TimelineFragment fragment = new HomeTimelineFragment();
+        args.putString(ARG_SCREEN_NAME, screenName);
+        UserTimelineFragment fragment = new UserTimelineFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mScreenName = getArguments().getString(ARG_SCREEN_NAME);
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Populate home timeline
-        populateHomeTimeline();
+        populateUserTimeline();
     }
-
 
     @Override
     void onSwipeRefresh() {
-        populateHomeTimeline();
+        populateUserTimeline();
     }
 
     @Override
     void onScroll() {
+
     }
 
     @Override
-    public void onLoadMore() {
-        populateHomeTimeline(mCurrentMaxTimelinePage + 1);
+    void onLoadMore() {
+        populateUserTimeline(mCurrentMaxTimelinePage + 1);
     }
 
-    private void populateHomeTimeline() {
+
+    private void populateUserTimeline() {
         // Reset
         mCurrentMaxTimelinePage = 0;
         clearAllTweets();
         if (NetworkCheck.isOnlineAndAvailable(getContext())) {
             mCallback.setProgressVisible(true);
-            populateHomeTimeline(0);
+            populateUserTimeline(0);
         } else {
             mCallback.setNoNetworkVisible(true);
             setRefreshing(false);
-            applyLocalTweets();
+            // Since I cannot solve how to retrieve those tweets data that mention myself,
+            // I'll leave it empty when there's no network available.
+//            applyLocalTweets();
         }
     }
 
-    private void populateHomeTimeline(final int page) {
+    private void populateUserTimeline(final int page) {
         // DEBUG prevent load too much!!
         if (HomeActivity.DEBUG && page >= 2) {
             return;
@@ -85,11 +98,11 @@ public class HomeTimelineFragment extends TimelineFragment {
         // Show the progress bar
         mCallback.setProgressVisible(true);
 
-        TweetItApplication.getRestClient().getHomeTimeline(page, new TextHttpResponseHandler() {
+        TweetItApplication.getRestClient().getUserTimeline(mScreenName, page, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 mCallback.setProgressVisible(false);
-                Toast.makeText(getActivity(), "failed to load home timeline:\n" + responseString,
+                Toast.makeText(getActivity(), "failed to load mentions timeline:\n" + responseString,
                         Toast.LENGTH_SHORT).show();
                 setRefreshing(false);
             }

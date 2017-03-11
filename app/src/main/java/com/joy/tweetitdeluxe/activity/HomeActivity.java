@@ -22,24 +22,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.joy.tweetitdeluxe.NetworkCheck;
 import com.joy.tweetitdeluxe.R;
 import com.joy.tweetitdeluxe.TweetItApplication;
+import com.joy.tweetitdeluxe.TweetItUtil;
+import com.joy.tweetitdeluxe.TwitterClient;
 import com.joy.tweetitdeluxe.dialog.ComposeDialog;
 import com.joy.tweetitdeluxe.dialog.DetailDialog;
 import com.joy.tweetitdeluxe.fragment.HomeTimelineFragment;
 import com.joy.tweetitdeluxe.fragment.MentionsTimelineFragment;
 import com.joy.tweetitdeluxe.fragment.TimelineFragment;
 import com.joy.tweetitdeluxe.model.Tweet;
+import com.joy.tweetitdeluxe.model.User;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.lang.reflect.Type;
-import java.util.List;
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -51,7 +52,6 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
     private static final String TAG = "HomeActivity.";
     private static final int INTERVAL_CHECK_NET_MS = 10000;
     public static final int INTERVAL_AUTO_COLLAPSE_APPBAR_MS = 5000;
-    private static final String SHARED_PREFS_TWEET_DRAFT_KEY = "tweet_draft";
 
     public static final boolean DEBUG = true;
 
@@ -168,6 +168,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
     protected void onStart() {
         super.onStart();
         mHandler.post(mCheckNetRunnable);
+        setupCurrentScreenNameInPrefs();
     }
 
     @Override
@@ -189,9 +190,13 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
             case R.id.toolbar_compose:
                 showComposeDialog();
                 return true;
+            case R.id.toolbar_profile:
+                launchProfileActivity();
+                return true;
             case R.id.toolbar_logout:
                 // Log out
-                clearTweetDraft();
+                TweetItUtil.clearTweetDraft(this);
+                TweetItUtil.clearCurrentScreenName(this);
                 TweetItApplication.getRestClient().clearAccessToken();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
@@ -202,31 +207,15 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
 
     private void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        ComposeDialog dialog = ComposeDialog.newInstance(getString(R.string.compose_dialog), getTweetDraft());
+        ComposeDialog dialog = ComposeDialog.newInstance(getString(R.string.compose_dialog), TweetItUtil.getTweetDraft(this));
         dialog.setCallback(this);
         dialog.show(fm, "fragment_compose_dialog");
     }
 
-    private void saveTweetDraft(String tweetBody) {
-        SharedPreferences pref =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor edit = pref.edit();
-        edit.putString(SHARED_PREFS_TWEET_DRAFT_KEY, tweetBody);
-        edit.apply();
-    }
-
-    private String getTweetDraft() {
-        SharedPreferences pref =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        return pref.getString(SHARED_PREFS_TWEET_DRAFT_KEY, "");
-    }
-
-    private void clearTweetDraft() {
-        SharedPreferences pref =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor edit = pref.edit();
-        edit.putString(SHARED_PREFS_TWEET_DRAFT_KEY, "");
-        edit.apply();
+    private void launchProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("screen_name", TweetItUtil.getCurrentScreenName(this));
+        startActivity(intent);
     }
 
     //
@@ -258,13 +247,15 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
                             // Move current watching position to the top most.
                             mHomeTimelineFragment.moveToMostTopPosition();
                         }
+                        // Clear draft
+                        TweetItUtil.clearTweetDraft(HomeActivity.this);
                     }
                 });
     }
 
     @Override
     public void onCancelNewTweet(String newTweet) {
-        saveTweetDraft(newTweet);
+        TweetItUtil.saveTweetDraft(this, newTweet);
     }
 
     //
@@ -294,7 +285,24 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         mNoNetwork.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public String getUserName() {//TODO
-        return "";
+    private void setupCurrentScreenNameInPrefs() {
+        TwitterClient client = TweetItApplication.getRestClient();
+
+        client.getUserInfo(new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (DEBUG)
+                    Log.d(TAG, "setupCurrentScreenNameInPrefs() failed to get current user info: " + responseString, throwable);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new Gson();
+                User user = gson.fromJson(responseString, User.class);
+                if (user != null) {
+                    TweetItUtil.saveCurrentScreenName(HomeActivity.this, user.getScreen_name());
+                }
+            }
+        });
     }
 }

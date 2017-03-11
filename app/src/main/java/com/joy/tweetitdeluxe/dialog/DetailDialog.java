@@ -62,7 +62,7 @@ public class DetailDialog extends DialogFragment {
 
     private void updateViews(View customView) {
         // Init views
-        mImage = (ImageView) customView.findViewById(R.id.image);
+        mImage = (ImageView) customView.findViewById(R.id.photo);
         mName = (TextView) customView.findViewById(R.id.name);
         mUserName = (TextView) customView.findViewById(R.id.user_name);
         mBody = (TextView) customView.findViewById(R.id.body);

@@ -10,14 +10,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joy.tweetitdeluxe.NetworkCheck;
 import com.joy.tweetitdeluxe.TweetItApplication;
+import com.joy.tweetitdeluxe.TweetItUtil;
+import com.joy.tweetitdeluxe.TwitterClient;
 import com.joy.tweetitdeluxe.activity.HomeActivity;
 import com.joy.tweetitdeluxe.adapter.TweetsAdapter;
 import com.joy.tweetitdeluxe.model.Tweet;
+import com.joy.tweetitdeluxe.model.Tweet_Table;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -29,6 +31,7 @@ import cz.msebera.android.httpclient.Header;
 public class MentionsTimelineFragment extends TimelineFragment {
     private static final String TAG = "MentionsTimelineFragment";
 
+    private boolean mNoMoreTweets;
 
     public static TimelineFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -58,13 +61,27 @@ public class MentionsTimelineFragment extends TimelineFragment {
 
     @Override
     void onLoadMore() {
-        populateMentionsTimeline();
+        populateMentionsTimeline(mCurrentMaxTimelinePage + 1);
     }
+
+//    @Override
+//    TweetsAdapter createRecyclerViewAdapter(Context context) {
+//        return new TweetsAdapter(context) {
+//            @Override
+//            public List<Tweet> loadTweetsFromDB() {
+//                return SQLite.select().from(Tweet.class)
+//                        .where(Tweet_Table.text.like("%" + TweetItUtil.getCurrentScreenName(getContext()) + "%"))
+//                        .queryList();
+//            }
+//        };
+//    }
 
     private void populateMentionsTimeline() {
         // Reset
         mCurrentMaxTimelinePage = 0;
+        mNoMoreTweets = false;
         clearAllTweets();
+
         if (NetworkCheck.isOnlineAndAvailable(getContext())) {
             mCallback.setProgressVisible(true);
             populateMentionsTimeline(0);
@@ -89,6 +106,8 @@ public class MentionsTimelineFragment extends TimelineFragment {
             mCallback.setNoNetworkVisible(true);
             return;
         }
+        // We've reached the max number of tweets
+        if (mNoMoreTweets) return;
         // Show the progress bar
         mCallback.setProgressVisible(true);
 
@@ -117,6 +136,11 @@ public class MentionsTimelineFragment extends TimelineFragment {
                 mCallback.setProgressVisible(false);
                 mCurrentMaxTimelinePage = page;
                 finishLoading();
+
+                // When it reaches max
+                if (tweets.size() < TwitterClient.BASE_COUNT) {
+                    mNoMoreTweets = true;
+                }
             }
         });
     }
