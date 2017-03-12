@@ -1,6 +1,7 @@
 package com.joy.tweetitdeluxe.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,8 +11,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.joy.tweetitdeluxe.NetworkCheck;
 import com.joy.tweetitdeluxe.R;
 import com.joy.tweetitdeluxe.TweetItApplication;
 import com.joy.tweetitdeluxe.TweetItUtil;
@@ -23,8 +27,6 @@ import com.joy.tweetitdeluxe.fragment.UserTimelineFragment;
 import com.joy.tweetitdeluxe.model.Tweet;
 import com.joy.tweetitdeluxe.model.User;
 import com.loopj.android.http.TextHttpResponseHandler;
-
-import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -39,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
 
     private Toolbar mToolbar;
     private MenuItem mToolbarProgress;
+    private TextView mNoNetwork;
     private String mScreenName;
 
     private UserProfileCallback mCallback;
@@ -47,16 +50,33 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
         void onPostNewTweet(Tweet newTweet);
     }
 
+    private Handler mHandler;
+
+    private Runnable mCheckNetRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (NetworkCheck.isNetworkAvailable(getBaseContext())) {
+                mNoNetwork.setVisibility(View.GONE);
+            } else {
+                mNoNetwork.setVisibility(View.VISIBLE);
+            }
+            mHandler.postDelayed(mCheckNetRunnable, TweetItApplication.INTERVAL_CHECK_NET_MS);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mNoNetwork = (TextView) findViewById(R.id.no_network);
 
         setSupportActionBar(mToolbar);
 
         // Get screen name
         mScreenName = getIntent().getExtras().getString("screen_name");
+
+        mHandler = new Handler();
 
         // Get the account info
         mClient = TweetItApplication.getRestClient();
@@ -79,6 +99,12 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mHandler.post(mCheckNetRunnable);
     }
 
     @Override
@@ -131,7 +157,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
 
     @Override
     public void onCancelNewTweet(String newTweet) {
-
+        TweetItUtil.saveTweetDraft(this, newTweet);
     }
 
     @Override
@@ -161,7 +187,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
 
     @Override
     public void setNoNetworkVisible(boolean visible) {
-
+        mNoNetwork.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void showComposeDialog() {

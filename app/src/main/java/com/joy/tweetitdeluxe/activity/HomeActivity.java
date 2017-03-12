@@ -51,7 +51,6 @@ import cz.msebera.android.httpclient.Header;
 
 public class HomeActivity extends AppCompatActivity implements TimelineFragment.Callback, ComposeDialog.Callback {
     private static final String TAG = "HomeActivity.";
-    private static final int INTERVAL_CHECK_NET_MS = 10000;
     public static final int INTERVAL_AUTO_COLLAPSE_APPBAR_MS = 5000;
 
     public static final boolean DEBUG = true;
@@ -74,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
             } else {
                 mNoNetwork.setVisibility(View.VISIBLE);
             }
-            mHandler.postDelayed(mCheckNetRunnable, INTERVAL_CHECK_NET_MS);
+            mHandler.postDelayed(mCheckNetRunnable, TweetItApplication.INTERVAL_CHECK_NET_MS);
         }
     };
 

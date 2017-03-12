@@ -13,6 +13,8 @@
     <color name="item_tweet_card_content_bg">#FFFFFF</color>
     <color name="item_tweet_name">#000000</color>
     <color name="item_tweet_sub_name">#b5000000</color>
-    
+
     <drawable name="dialog_title_bar_background">@color/colorPrimary</drawable>
+
+    <color name="profile_activity_follower_text_color">@color/colorPrimary</color>
 </resources>

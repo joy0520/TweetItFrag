@@ -41,7 +41,7 @@
 
         <activity
             android:name=".activity.HomeActivity"
-            android:label="@string/activity_home" />
+            android:label="@string/main_viewer" />
 
         <activity
             android:name=".activity.ProfileActivity"

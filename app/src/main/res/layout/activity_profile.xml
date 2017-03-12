@@ -10,11 +10,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
+    <TextView
+        android:id="@+id/no_network"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:background="@color/main_viewer_no_network_bg_color"
+        android:gravity="center_horizontal"
+        android:text="@string/main_viewer_no_network"
+        android:textColor="@color/main_viewer_no_network_text_color"
+        android:textSize="@dimen/main_viewer_no_network" />
+
     <FrameLayout
         android:id="@+id/flUserHeader"
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_user_container_height"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/no_network" />
 
     <FrameLayout
         android:id="@+id/flUserTimeline"

@@ -22,6 +22,7 @@ public class TweetItApplication extends Application {
     private static Context context;
 
     public static final boolean DEBUG = true;
+    public static final int INTERVAL_CHECK_NET_MS = 10000;
 
     @Override
     public void onCreate() {
