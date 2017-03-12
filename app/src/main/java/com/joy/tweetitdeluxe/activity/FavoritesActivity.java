@@ -6,13 +6,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.joy.tweetitdeluxe.R;
-import com.joy.tweetitdeluxe.fragment.UserListFragment;
+import com.joy.tweetitdeluxe.fragment.FavoritesTimelineFragment;
+import com.joy.tweetitdeluxe.fragment.TimelineFragment;
+import com.joy.tweetitdeluxe.model.Tweet;
 
 /**
  * Created by joy0520 on 2017/3/12.
  */
 
-public class UserListActivity extends AppCompatActivity {
+public class FavoritesActivity extends AppCompatActivity implements TimelineFragment.Callback {
     public static final String EXTRA_SCREEN_NAME = "screen_name";
 
     @Override
@@ -28,10 +30,30 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void setupFragment(String screenName) {
-        UserListFragment userListFragment = UserListFragment.newInstance(screenName);
+        FavoritesTimelineFragment favoritesTimelineFragment = FavoritesTimelineFragment.newInstance(screenName);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        ft.replace(R.id.flUserListHolder, userListFragment);
+        ft.replace(R.id.flUserListHolder, favoritesTimelineFragment);
         ft.commit();
+    }
+
+    @Override
+    public void onItemClicked(Tweet tweet) {
+
+    }
+
+    @Override
+    public void notifyAppBarCollapse() {
+
+    }
+
+    @Override
+    public void setProgressVisible(boolean visible) {
+
+    }
+
+    @Override
+    public void setNoNetworkVisible(boolean visible) {
+
     }
 }

@@ -2,13 +2,10 @@ package com.joy.tweetitdeluxe.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,18 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
 import com.joy.tweetitdeluxe.R;
-import com.joy.tweetitdeluxe.TweetItApplication;
-import com.joy.tweetitdeluxe.TwitterClient;
+import com.joy.tweetitdeluxe.activity.FavoritesActivity;
 import com.joy.tweetitdeluxe.activity.UserListActivity;
 import com.joy.tweetitdeluxe.model.User;
-import com.joy.tweetitdeluxe.model.UserListResponse;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.parceler.Parcels;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by joy0520 on 2017/3/11.
@@ -37,7 +28,7 @@ public class UserProfileHeaderFragment extends Fragment {
     public static final String ARG_USER = "ARG_USER";
 
     private ImageView mPhoto;
-    private TextView mName, mDescription, mFollower, mFollowing;
+    private TextView mName, mDescription, mFollower, mFavorites;
 
     private User mUser;
 
@@ -72,7 +63,7 @@ public class UserProfileHeaderFragment extends Fragment {
         mName = (TextView) view.findViewById(R.id.name);
         mDescription = (TextView) view.findViewById(R.id.description);
         mFollower = (TextView) view.findViewById(R.id.follower);
-        mFollowing = (TextView) view.findViewById(R.id.following);
+        mFavorites = (TextView) view.findViewById(R.id.following);
 
         // Setup views
         if (mUser != null) {
@@ -84,7 +75,7 @@ public class UserProfileHeaderFragment extends Fragment {
             mName.setText(mUser.getName());
             mDescription.setText(mUser.getDescription());
             mFollower.setText(mUser.getFollowers_count() + " followers");
-            mFollowing.setText(mUser.getFavourites_count() + " following");
+            mFavorites.setText(mUser.getFavourites_count() + " favorites");
 
             // Setup click event
             mFollower.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +86,14 @@ public class UserProfileHeaderFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            // TODO mFollowing click
+            mFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), FavoritesActivity.class);
+                    intent.putExtra(FavoritesActivity.EXTRA_SCREEN_NAME, mUser.getScreen_name());
+                    startActivity(intent);
+                }
+            });
         }
 
         return view;

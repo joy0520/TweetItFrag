@@ -50,6 +50,10 @@
         <activity
             android:name=".activity.UserListActivity"
             android:label="@string/activity_user_list" />
+
+        <activity
+            android:name=".activity.FavoritesActivity"
+            android:label="@string/activity_favorites" />
     </application>
 
 </manifest>

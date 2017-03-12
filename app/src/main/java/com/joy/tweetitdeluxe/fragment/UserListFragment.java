@@ -66,7 +66,7 @@ public class UserListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_users_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
         // Init views
         mList = (RecyclerView) view.findViewById(R.id.list);
 

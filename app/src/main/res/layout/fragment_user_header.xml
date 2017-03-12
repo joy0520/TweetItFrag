@@ -47,11 +47,11 @@
             android:id="@+id/follower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/profile_user_follower_padding"
             android:layout_weight="1"
             android:background="@color/profile_activity_follower_text_bg_color"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:padding="@dimen/profile_user_follower_padding"
             android:textColor="@color/profile_activity_follower_text_color"
             android:textSize="@dimen/profile_user_other_info_text_size" />
 
@@ -59,11 +59,11 @@
             android:id="@+id/following"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/profile_user_follower_padding"
             android:layout_weight="1"
             android:background="@color/profile_activity_follower_text_bg_color"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:padding="@dimen/profile_user_follower_padding"
             android:textColor="@color/profile_activity_follower_text_color"
             android:textSize="@dimen/profile_user_other_info_text_size" />
 
