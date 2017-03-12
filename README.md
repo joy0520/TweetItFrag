@@ -48,6 +48,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
+![demo gif](http://i.imgur.com/if7XnLw.gif)
 <img src='http://i.imgur.com/if7XnLw.gif' title='demo gif'/>
 
 GIF created with [Gif Maker - Gif Editor](https://play.google.com/store/apps/details?id=com.kayak.studio.gifmaker&hl=zh_HK).
