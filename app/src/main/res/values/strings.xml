@@ -14,6 +14,7 @@
     <string name="main_viewer_new_tweets">New Tweets</string>
     <string name="main_viewer_menu_item_compose">Compose</string>
     <string name="main_viewer_menu_item_profile">Profile</string>
+    <string name="main_viewer_menu_item_progress">Loading...</string>
     <string name="main_viewer_menu_item_logout">Log out</string>
 
     <string name="compose_dialog">New Tweet</string>

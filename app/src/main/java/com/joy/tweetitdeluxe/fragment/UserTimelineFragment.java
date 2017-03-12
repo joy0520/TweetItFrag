@@ -1,5 +1,6 @@
 package com.joy.tweetitdeluxe.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.joy.tweetitdeluxe.NetworkCheck;
 import com.joy.tweetitdeluxe.TweetItApplication;
 import com.joy.tweetitdeluxe.activity.HomeActivity;
+import com.joy.tweetitdeluxe.activity.ProfileActivity;
 import com.joy.tweetitdeluxe.model.Tweet;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -22,7 +24,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by joy0520 on 2017/3/10.
  */
 
-public class UserTimelineFragment extends TimelineFragment {
+public class UserTimelineFragment extends TimelineFragment implements ProfileActivity.UserProfileCallback {
     public static final String ARG_SCREEN_NAME = "ARG_SCREEN_NAME";
     private static final String TAG = "UserTimelineFragment";
 
@@ -34,6 +36,14 @@ public class UserTimelineFragment extends TimelineFragment {
         UserTimelineFragment fragment = new UserTimelineFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ProfileActivity) {
+            ((ProfileActivity)context).setCallback(this);
+        }
     }
 
     @Override
@@ -66,6 +76,11 @@ public class UserTimelineFragment extends TimelineFragment {
         populateUserTimeline(mCurrentMaxTimelinePage + 1);
     }
 
+    @Override
+    public void onPostNewTweet(Tweet newTweet) {
+        onPostANewTweet(newTweet);
+        moveToMostTopPosition();
+    }
 
     private void populateUserTimeline() {
         // Reset
@@ -85,7 +100,7 @@ public class UserTimelineFragment extends TimelineFragment {
 
     private void populateUserTimeline(final int page) {
         // DEBUG prevent load too much!!
-        if (HomeActivity.DEBUG && page >= 2) {
+        if (TweetItApplication.DEBUG && page >= 2) {
             return;
         }
         // No network hint

@@ -96,7 +96,7 @@ public class MentionsTimelineFragment extends TimelineFragment {
 
     private void populateMentionsTimeline(final int page) {
         // DEBUG prevent load too much!!
-        if (HomeActivity.DEBUG && page >= 2) {
+        if (TweetItApplication.DEBUG && page >= 2) {
             return;
         }
         // No network hint

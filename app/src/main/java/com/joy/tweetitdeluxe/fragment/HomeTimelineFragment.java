@@ -72,7 +72,7 @@ public class HomeTimelineFragment extends TimelineFragment {
 
     private void populateHomeTimeline(final int page) {
         // DEBUG prevent load too much!!
-        if (HomeActivity.DEBUG && page >= 2) {
+        if (TweetItApplication.DEBUG && page >= 2) {
             return;
         }
         // No network hint

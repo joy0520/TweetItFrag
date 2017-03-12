@@ -21,6 +21,8 @@ import android.content.Intent;
 public class TweetItApplication extends Application {
     private static Context context;
 
+    public static final boolean DEBUG = true;
+
     @Override
     public void onCreate() {
         super.onCreate();

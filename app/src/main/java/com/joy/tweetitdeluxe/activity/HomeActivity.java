@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +58,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
 
     private AppBarLayout mAppbarLayout;
     private Toolbar mToolbar;
+    private MenuItem mToolbarProgress;
     private TextView mNoNetwork;
     private ProgressBar mProgressBottom;
     private FloatingActionButton mFloatingButton;
@@ -205,6 +207,16 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        mToolbarProgress = menu.findItem(R.id.toolbar_progress);
+        // Extract the action-view from the menu item
+//        ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(mToolbarProgress);
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     private void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
         ComposeDialog dialog = ComposeDialog.newInstance(getString(R.string.compose_dialog), TweetItUtil.getTweetDraft(this));
@@ -224,7 +236,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
 
     @Override
     public void onPostNewTweet(String newTweetBody) {
-        if (DEBUG) Log.i("onPostNewTweet()", "newTweetBody=" + newTweetBody);
+        if (TweetItApplication.DEBUG) Log.i("onPostNewTweet()", "newTweetBody=" + newTweetBody);
         if (newTweetBody == null || newTweetBody.isEmpty()) return;
         TweetItApplication.getRestClient().postTweet(newTweetBody,
                 new TextHttpResponseHandler() {
@@ -277,7 +289,9 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
 
     @Override
     public void setProgressVisible(boolean visible) {
+        Log.i("setProgressVisible", "visible=" + visible);
         mProgressBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
+        showToolbarProgress(visible);
     }
 
     @Override
@@ -291,7 +305,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         client.getUserInfo(new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (DEBUG)
+                if (TweetItApplication.DEBUG)
                     Log.d(TAG, "setupCurrentScreenNameInPrefs() failed to get current user info: " + responseString, throwable);
             }
 
@@ -304,5 +318,9 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
                 }
             }
         });
+    }
+
+    private void showToolbarProgress(boolean visible) {
+        if (mToolbarProgress != null) mToolbarProgress.setVisible(visible);
     }
 }

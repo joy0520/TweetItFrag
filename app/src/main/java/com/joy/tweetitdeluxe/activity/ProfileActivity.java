@@ -38,7 +38,14 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
     TwitterClient mClient;
 
     private Toolbar mToolbar;
+    private MenuItem mToolbarProgress;
     private String mScreenName;
+
+    private UserProfileCallback mCallback;
+
+    public interface UserProfileCallback {
+        void onPostNewTweet(Tweet newTweet);
+    }
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -56,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
         mClient.getUser(mScreenName, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (HomeActivity.DEBUG)
+                if (TweetItApplication.DEBUG)
                     Log.d(TAG, "failed to get account info for screen name " + mScreenName + " : " + responseString, throwable);
             }
 
@@ -82,7 +89,43 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
     }
 
     @Override
-    public void onPostNewTweet(String newTweet) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        mToolbarProgress = menu.findItem(R.id.toolbar_progress);
+        // Extract the action-view from the menu item
+//        ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(mToolbarProgress);
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onPostNewTweet(String newTweetBody) {
+        if (TweetItApplication.DEBUG) Log.i("onPostNewTweet()", "newTweetBody=" + newTweetBody);
+        if (newTweetBody == null || newTweetBody.isEmpty()) return;
+        TweetItApplication.getRestClient().postTweet(newTweetBody,
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.i(TAG + "onFailure()", "" + responseString);
+                        setProgressVisible(false);
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        Log.i(TAG + "onSuccess()", "" + responseString);
+                        setProgressVisible(true);
+                        Gson gson = new Gson();
+                        Tweet tweet = gson.fromJson(responseString, Tweet.class);
+
+                        if (mCallback != null) {
+                            mCallback.onPostNewTweet(tweet);
+                        }
+
+                        // Clear draft
+                        TweetItUtil.clearTweetDraft(ProfileActivity.this);
+                        setProgressVisible(false);
+                    }
+                });
 
     }
 
@@ -113,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
 
     @Override
     public void setProgressVisible(boolean visible) {
-
+        showToolbarProgress(visible);
     }
 
     @Override
@@ -144,4 +187,11 @@ public class ProfileActivity extends AppCompatActivity implements ComposeDialog.
         ft.commit();
     }
 
+    private void showToolbarProgress(boolean visible) {
+        if (mToolbarProgress != null) mToolbarProgress.setVisible(visible);
+    }
+
+    public void setCallback(UserProfileCallback callback) {
+        mCallback = callback;
+    }
 }
