@@ -57,15 +57,6 @@
                 android:layout_below="@id/no_network">
 
             </android.support.v4.view.ViewPager>
-
-            <ProgressBar
-                android:id="@+id/progrss_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/view_pager"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
         </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton

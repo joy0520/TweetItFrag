@@ -17,4 +17,5 @@
     <drawable name="dialog_title_bar_background">@color/colorPrimary</drawable>
 
     <color name="profile_activity_follower_text_color">@color/colorPrimary</color>
+    <color name="profile_activity_follower_text_bg_color">#99ffe5cc</color>
 </resources>

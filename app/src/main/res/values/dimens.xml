@@ -30,5 +30,6 @@
     <dimen name="profile_user_photo_padding">8dp</dimen>
     <dimen name="profile_user_name_size">20sp</dimen>
     <dimen name="profile_user_other_info_text_size">16sp</dimen>
+    <dimen name="profile_user_follower_padding">5dp</dimen>
 
 </resources>

@@ -6,6 +6,7 @@
     <string name="app_name">Tweet It Deluxe</string>
     <string name="main_viewer">Home Timeline</string>
     <string name="activity_profile">Profile Activity</string>
+    <string name="activity_user_list">Followers</string>
 
     <string name="login_label">Connect to Twitter</string>
 

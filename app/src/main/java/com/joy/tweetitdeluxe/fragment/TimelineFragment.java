@@ -85,7 +85,6 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
     // Set the associated text for the title
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         // Init views
         mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);

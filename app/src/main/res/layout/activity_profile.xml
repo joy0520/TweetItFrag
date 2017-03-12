@@ -24,7 +24,7 @@
     <FrameLayout
         android:id="@+id/flUserHeader"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/profile_user_container_height"
+        android:layout_height="wrap_content"
         android:layout_below="@id/no_network" />
 
     <FrameLayout

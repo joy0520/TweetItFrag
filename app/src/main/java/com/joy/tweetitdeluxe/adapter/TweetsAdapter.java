@@ -92,7 +92,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
         void onItemClicked(Tweet tweet);
     }
 
-    private List<Tweet> mList;
+    private List<Tweet> mTweets;
     private Context mContext;
 
     private Callback mCallback;
@@ -100,24 +100,24 @@ public class TweetsAdapter extends RecyclerView.Adapter {
     public TweetsAdapter(Context context) {
         super();
         mContext = context;
-        mList = new ArrayList<>();
+        mTweets = new ArrayList<>();
     }
 
     public void postANewTweet(Tweet tweet) {
-        mList.add(0, tweet);
-        saveTweets(mList);
+        mTweets.add(0, tweet);
+        saveTweets(mTweets);
         notifyItemInserted(0);
     }
 
     public void addTweets(List<Tweet> tweets) {
-        mList.addAll(tweets);
-        saveTweets(mList);
+        mTweets.addAll(tweets);
+        saveTweets(mTweets);
         notifyDataSetChanged();
     }
 
     public void clearAll() {
-        mList.clear();
-        deleteSavedTweets(mList);
+        mTweets.clear();
+        deleteSavedTweets(mTweets);
         notifyDataSetChanged();
     }
 
@@ -135,7 +135,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final Tweet tweet = mList.get(position);
+        final Tweet tweet = mTweets.get(position);
         if (holder instanceof TweetHolder) {
             TweetHolder tweetHolder = (TweetHolder) holder;
             // Setup view content
@@ -171,7 +171,7 @@ public class TweetsAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mTweets.size();
     }
 
 
@@ -193,9 +193,9 @@ public class TweetsAdapter extends RecyclerView.Adapter {
     }
 
     public void applyLocalTweets() {
-        mList.clear();
-        mList.addAll(loadTweetsFromDB());
-        Collections.sort(mList);
+        mTweets.clear();
+        mTweets.addAll(loadTweetsFromDB());
+        Collections.sort(mTweets);
         notifyDataSetChanged();
     }
 

@@ -59,7 +59,6 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
     private Toolbar mToolbar;
     private MenuItem mToolbarProgress;
     private TextView mNoNetwork;
-    private ProgressBar mProgressBottom;
     private FloatingActionButton mFloatingButton;
     private TimelineFragment mHomeTimelineFragment, mMentionsTimelineFragment;
 
@@ -148,7 +147,6 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mNoNetwork = (TextView) findViewById(R.id.no_network);
-        mProgressBottom = (ProgressBar) findViewById(R.id.progrss_bottom);
         mFloatingButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
         // Setup toolbar
@@ -288,8 +286,6 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
 
     @Override
     public void setProgressVisible(boolean visible) {
-        Log.i("setProgressVisible", "visible=" + visible);
-        mProgressBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
         showToolbarProgress(visible);
     }
 
