@@ -49,7 +49,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by joy0520 on 2017/3/7.
  */
 
-public class HomeActivity extends AppCompatActivity implements TimelineFragment.Callback, ComposeDialog.Callback {
+public class HomeActivity extends AppCompatActivity implements TimelineFragment.Callback, ComposeDialog.Callback, DetailDialog.Callback {
     private static final String TAG = "HomeActivity.";
     public static final int INTERVAL_AUTO_COLLAPSE_APPBAR_MS = 5000;
 
@@ -227,9 +227,7 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         startActivity(intent);
     }
 
-    //
     // Interface for ComposeDialog
-    //
 
     @Override
     public void onPostNewTweet(String newTweetBody) {
@@ -267,13 +265,13 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
         TweetItUtil.saveTweetDraft(this, newTweet);
     }
 
-    //
     // Interface for TimelineFragment
-    //
+
     @Override
     public void onItemClicked(Tweet tweet) {
         FragmentManager fm = getSupportFragmentManager();
         DetailDialog dialog = DetailDialog.newInstance(tweet);
+        dialog.setCallback(this);
         dialog.show(fm, "fragment_detail_dialog");
     }
 
@@ -292,6 +290,15 @@ public class HomeActivity extends AppCompatActivity implements TimelineFragment.
     @Override
     public void setNoNetworkVisible(boolean visible) {
         mNoNetwork.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    // Interface for DetailDialog
+
+    @Override
+    public void onUpdateTweetFavorite(long id, boolean favorited) {
+        // Update the tweet in timeline
+        mHomeTimelineFragment.updateTweetFavorited(id, favorited);
+        // Update the tweet saved in DB
     }
 
     private void setupCurrentScreenNameInPrefs() {

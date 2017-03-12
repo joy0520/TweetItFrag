@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -107,6 +108,18 @@ public class TweetsAdapter extends RecyclerView.Adapter {
         mTweets.add(0, tweet);
         saveTweets(mTweets);
         notifyItemInserted(0);
+    }
+
+    public void updateTweetFavorited(long id, boolean favortied) {
+        int position = -1;
+        for (Tweet tweet : mTweets) {
+            if (tweet.getId() == id) {
+                tweet.setFavorited(favortied);
+                tweet.save();
+                position = mTweets.indexOf(tweet);
+            }
+        }
+        if (position != -1) notifyItemChanged(position);
     }
 
     public void addTweets(List<Tweet> tweets) {

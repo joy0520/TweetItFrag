@@ -41,6 +41,8 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
     private User user;
     @Column
     private boolean mentionsMe;
+    @Column
+    private boolean favorited;
 
     private UserMentions[] user_mentions;
 
@@ -113,6 +115,10 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
         return user.profile_image_url_https;
     }
 
+    public boolean isFavorited() {
+        return favorited;
+    }
+
     public boolean isMentionsMe() {
         return mentionsMe;
     }
@@ -135,6 +141,10 @@ public class Tweet extends BaseModel implements Comparable<Tweet> {
 
     public void setMentionsMe(boolean mentionsMe) {
         this.mentionsMe = mentionsMe;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
     }
 
     public Tweet checkMentionsUser(String screenName) {

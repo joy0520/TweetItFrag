@@ -48,4 +48,21 @@
         android:textColor="@color/item_tweet_name"
         android:textSize="@dimen/dialog_tweet_detail_content_size" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/body"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/favorites"
+            android:layout_width="@dimen/ic_favorite_heart_size"
+            android:layout_height="@dimen/ic_favorite_heart_size"
+            android:button="@drawable/ic_favorite_heart"
+            android:checkable="true"
+            android:clickable="true" />
+
+    </LinearLayout>
+
 </RelativeLayout>

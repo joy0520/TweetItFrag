@@ -6,25 +6,59 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.joy.tweetitdeluxe.R;
+import com.joy.tweetitdeluxe.TweetItApplication;
+import com.joy.tweetitdeluxe.TwitterClient;
 import com.joy.tweetitdeluxe.model.Tweet;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.parceler.Parcels;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by joy0520 on 2017/3/5.
  */
 
 public class DetailDialog extends DialogFragment {
+    private static final String TAG = "DetailDialog";
+
     private ImageView mImage;
     private TextView mName, mUserName, mBody;
+    private CheckBox mFavorite;
+
     private Tweet mTweet;
+
+    private Callback mCallback;
+
+    private TextHttpResponseHandler mResponseHandler = new TextHttpResponseHandler() {
+        @Override
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            if (TweetItApplication.DEBUG)
+                Log.d(TAG, "failed to get response when update favorite: " + responseString, throwable);
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+            // Update the tweet.favorited saved
+            if (mCallback != null) {
+                mCallback.onUpdateTweetFavorite(mTweet.getId(), mFavorite.isChecked());
+            }
+        }
+    };
+
+    public interface Callback {
+        void onUpdateTweetFavorite(long id, boolean favorited);
+    }
 
     public static DetailDialog newInstance(Tweet tweet) {
         DetailDialog frag = new DetailDialog();
@@ -66,6 +100,7 @@ public class DetailDialog extends DialogFragment {
         mName = (TextView) customView.findViewById(R.id.name);
         mUserName = (TextView) customView.findViewById(R.id.user_name);
         mBody = (TextView) customView.findViewById(R.id.body);
+        mFavorite = (CheckBox) customView.findViewById(R.id.favorites);
         // Setup views content
         Glide.with(getActivity())
                 .load(mTweet.getProfileImageUrl())
@@ -74,5 +109,21 @@ public class DetailDialog extends DialogFragment {
         mName.setText(mTweet.getName());
         mUserName.setText(String.format("@%s", mTweet.getScreenName()));
         mBody.setText(mTweet.getText());
+        mFavorite.setChecked(mTweet.isFavorited());
+        mFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                TwitterClient client = TweetItApplication.getRestClient();
+                if (isChecked) {
+                    client.postFavoriteCreate(mTweet.getId(), mResponseHandler);
+                } else {
+                    client.postFavoriteDestroy(mTweet.getId(), mResponseHandler);
+                }
+            }
+        });
+    }
+
+    public void setCallback(Callback callback) {
+        mCallback = callback;
     }
 }

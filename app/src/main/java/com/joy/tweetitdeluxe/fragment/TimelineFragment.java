@@ -118,8 +118,8 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
 //                    // On top most of the list, hide app bar immediately.
 //                    mHandler.post(mCollapseAppbarRunnable);
 //                } else {
-                    mHandler.postDelayed(mCollapseAppbarRunnable,
-                            HomeActivity.INTERVAL_AUTO_COLLAPSE_APPBAR_MS);
+                mHandler.postDelayed(mCollapseAppbarRunnable,
+                        HomeActivity.INTERVAL_AUTO_COLLAPSE_APPBAR_MS);
 //                }
             }
 
@@ -157,6 +157,10 @@ public abstract class TimelineFragment extends Fragment implements TweetsAdapter
 
     public void clearAllTweets() {
         mAdapter.clearAll();
+    }
+
+    public void updateTweetFavorited(long id, boolean favorited) {
+        mAdapter.updateTweetFavorited(id, favorited);
     }
 
     public void applyLocalTweets() {

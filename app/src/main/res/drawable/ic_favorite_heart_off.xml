@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="510"
+    android:viewportHeight="510">
+
+    <path
+        android:fillColor="@color/ic_favorites_heart_off"
+        android:pathData="M255,489.6 L219.3,453.9 C86.7,336.6,0,257.55,0,160.65
+C0,81.6,61.2,20.4,140.25,20.4 C183.6,20.4,226.95,40.8,255,73.95
+C283.05,40.8,326.4,20.4,369.75,20.4 C448.8,20.4,510,81.6,510,160.65
+C510,257.55,423.3,336.6,290.7,453.9 L255,489.6 Z" />
+</vector>
